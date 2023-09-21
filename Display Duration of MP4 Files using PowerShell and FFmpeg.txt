@@ -1,0 +1,22 @@
+# Define the path to the FFmpeg executable
+$ffmpegPath = "C:\Users\parveen.kumar\Downloads\ffmpeg-6.0-full_build\ffmpeg-6.0-full_build\bin\ffmpeg.exe" # Replace with the actual path to ffmpeg.exe
+
+# Define the directory containing your MP4 files
+$directory = "E:\Premiere projects\Parveen Prajapati\General - PowerShell\Short Videos\Final" # Replace with the actual directory path
+
+# Get a list of MP4 files in the directory
+$mp4Files = Get-ChildItem -Path $directory -Filter *.mp4
+
+# Loop through each MP4 file and get its duration
+foreach ($mp4File in $mp4Files) {
+    # Use FFmpeg to get the duration
+    $ffmpegOutput = & $ffmpegPath -i $mp4File.FullName 2>&1
+
+    # Parse the output to extract the duration
+    $durationLine = $ffmpegOutput | Where-Object { $_ -match "Duration" }
+    $duration = $durationLine -replace "Duration: " , "" -replace ", start", ""
+
+    Write-Host "File: $($mp4File.Name)"
+    Write-Host "Duration: $duration"
+    Write-Host ""
+}
